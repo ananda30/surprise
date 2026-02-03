@@ -10,12 +10,26 @@
 
 body {
   font-family: 'Cormorant Garamond', serif;
-  background: linear-gradient(180deg, #0a1128, #1a0933, #2d1b4e);
-  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    #050814 0%,
+    #0d0620 50%,
+    #160a2e 100%
+  );  min-height: 100vh;
   overflow-x: hidden;
   color: white;
 }
 
+body:not(.started) * {
+  animation-play-state: paused !important;
+}
+body:not(.started) .container {
+  opacity: 0;
+}
+body.started .container {
+  opacity: 1;
+  transition: opacity 2.0s ease;
+}
 /* Aurora */
 .aurora-container {
   position: fixed;
@@ -74,6 +88,16 @@ body {
   50% { opacity: 1; }
 }
 
+/* Darken overall background */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25); /* darkness strength */
+  z-index: 1;
+  pointer-events: none;
+}
+
 /* Floating hearts */
 .floating-heart {
   position: absolute;
@@ -125,6 +149,7 @@ h1 {
   font-family: 'Playfair Display', serif;
   font-size: 3rem;
   text-shadow: 0 0 30px var(--rose);
+  letter-spacing: -0.01em;
 }
 
 .subtitle {
@@ -135,25 +160,68 @@ h1 {
 .message-card {
   margin-top: 50px;
   padding: 50px 35px;
-  border-radius: 25px;
-  background: rgba(255,255,255,.08);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 60px rgba(255,107,157,.5);
+  border-radius: 28px;
   max-width: 700px;
-  will-change: transform;
-  transition: transform .15s ease-out;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.14),
+      rgba(255,255,255,0.06)
+    );
+
+  backdrop-filter: blur(22px);
+  border: 1px solid rgba(255,255,255,0.18);
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(255,107,157,0.25),
+    0 0 60px rgba(255,107,157,0.35);
+
+  position: relative;
+  transition: box-shadow 0.6s ease, transform 0.6s ease;
 }
+
+.message-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      120% 60% at 50% -20%,
+      rgba(255,255,255,0.18),
+      transparent 60%
+    );
+  pointer-events: none;
+}
+
+@keyframes cardBreathe {
+  0%, 100% {
+    box-shadow:
+      0 30px 80px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(255,107,157,0.25),
+      0 0 50px rgba(255,107,157,0.3);
+  }
+  50% {
+    box-shadow:
+      0 36px 90px rgba(0,0,0,0.6),
+      0 0 0 1px rgba(255,107,157,0.35),
+      0 0 70px rgba(255,107,157,0.45);
+  }
+}
+
+.message-card {
+  animation: cardBreathe 6s ease-in-out infinite;
+}
+
 
 .message-text {
   font-size: 1.4rem;
   line-height: 1.9;
   text-align: center;
-}
-
-.signature {
-  margin-top: 30px;
-  text-align: right;
-  font-style: italic;
+letter-spacing: 0.01em;
+    color: #fff7fb;
 }
 
 .big-heart {
@@ -165,14 +233,6 @@ h1 {
 
 @keyframes pulse {
   50% { transform: scale(1.15); }
-}
-
-/* Optional photo */
-.memory-photo {
-  width: 100%;
-  border-radius: 20px;
-  margin-top: 30px;
-  animation: fadeIn 2s forwards;
 }
 
 @keyframes fadeIn {
@@ -361,4 +421,63 @@ h1 {
 
 .polaroid-container:active .polaroid-inner {
   transform: scale(0.97) rotateY(var(--flip, 0deg));
+}
+
+.signature {
+  margin-top: 32px;
+  text-align: right;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: #ffd4e5;
+  opacity: 0;
+  animation: signatureFade 1.6s ease forwards;
+  animation-delay: 1.0s; /* LAST thing to appear */
+}
+
+.signed-by {
+  display: block;
+  margin-top: 4px;
+  font-size: 1.1rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+@keyframes signatureFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@media (max-width: 480px) {
+  .signature {
+    font-size: 1.25rem;
+  }
+
+  .signed-by {
+    font-size: 1rem;
+
+      letter-spacing: 0.04em;
+  }
+}
+
+.heart-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.made-with-love {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Cormorant Garamond', serif;
 }

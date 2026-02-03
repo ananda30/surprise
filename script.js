@@ -28,6 +28,7 @@ function fadeInAudio() {
 }
 
 overlay.addEventListener('click', () => {
+  document.body.classList.add('started'); // 🔥 START EVERYTHING
   fadeInAudio();
   overlay.style.display = 'none';
   bigHeart.classList.add('heartbeat');
