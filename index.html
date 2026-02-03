@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rose: #ff6b9d;
+            --deep-rose: #c44569;
+            --blush: #ffeef7;
+            --cream: #fff5f7;
+            --shadow: rgba(196, 69, 105, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--blush) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Parallax background layers */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Floating hearts with parallax */
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            animation: float-up 15s infinite;
+            will-change: transform;
+        }
+
+        .layer-1 .floating-heart { animation-duration: 20s; }
+        .layer-2 .floating-heart { animation-duration: 15s; }
+        .layer-3 .floating-heart { animation-duration: 10s; }
+
+        .floating-heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .floating-heart:nth-child(2) { left: 25%; animation-delay: 3s; font-size: 15px; }
+        .floating-heart:nth-child(3) { left: 40%; animation-delay: 6s; font-size: 25px; }
+        .floating-heart:nth-child(4) { left: 55%; animation-delay: 2s; }
+        .floating-heart:nth-child(5) { left: 70%; animation-delay: 8s; font-size: 18px; }
+        .floating-heart:nth-child(6) { left: 85%; animation-delay: 4s; font-size: 22px; }
+
+        @keyframes float-up {
+            0% {
+                bottom: -10%;
+                opacity: 0;
+                transform: translateX(0) rotate(0deg);
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                bottom: 110%;
+                opacity: 0;
+                transform: translateX(100px) rotate(360deg);
+            }
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Header section */
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fade-in-down 1s ease-out;
+            transform-style: preserve-3d;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--deep-rose);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px var(--shadow);
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 2rem;
+            color: var(--rose);
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+
+        /* Message card with 3D effect */
+        .message-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 80px 60px;
+            box-shadow: 
+                0 20px 60px var(--shadow),
+                0 0 0 1px rgba(255, 107, 157, 0.1);
+            border: 2px solid rgba(255, 107, 157, 0.2);
+            animation: fade-in-up 1s ease-out 0.3s both;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .message-card::before {
+            content: '❤';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            font-size: 200px;
+            opacity: 0.05;
+            transform: rotate(-15deg);
+            pointer-events: none;
+        }
+
+        .message-card::after {
+            content: '❤';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            font-size: 200px;
+            opacity: 0.05;
+            transform: rotate(15deg);
+            pointer-events: none;
+        }
+
+        .message-text {
+            font-size: 1.8rem;
+            line-height: 2.2;
+            color: #333;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 40px;
+        }
+
+        .message-text p {
+            margin-bottom: 30px;
+        }
+
+        .signature {
+            text-align: right;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--deep-rose);
+            font-style: italic;
+            margin-top: 50px;
+        }
+
+        /* Big heart animation */
+        .big-heart {
+            font-size: 120px;
+            text-align: center;
+            margin: 60px 0;
+            animation: pulse 2s ease-in-out infinite, fade-in 1s ease-out 0.6s both;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 10px 20px var(--shadow));
+        }
+
+        .big-heart:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Animations */
+        @keyframes fade-in-down {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Interactive heart click effect */
+        .heart-burst {
+            position: fixed;
+            pointer-events: none;
+            animation: burst 1s ease-out forwards;
+            font-size: 30px;
+            z-index: 9999;
+        }
+
+        @keyframes burst {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0.5);
+            }
+        }
+
+        /* Audio Player */
+        .audio-player {
+            width: 100%;
+            max-width: 300px;
+            margin: 40px auto 0;
+            text-align: center;
+            animation: fade-in 1.5s ease-out 1.2s both;
+        }
+
+        .music-button {
+            background: white;
+            border: 2px solid var(--rose);
+            color: var(--deep-rose);
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-family: 'Cormorant Garamond', serif;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .music-button:hover {
+            background: var(--rose);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .music-button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .subtitle {
+                font-size: 1.3rem;
+                letter-spacing: 2px;
+            }
+
+            header {
+                margin-bottom: 50px;
+            }
+
+            .message-card {
+                padding: 50px 35px;
+            }
+
+            .message-text {
+                font-size: 1.4rem;
+                line-height: 1.9;
+            }
+
+            .signature {
+                font-size: 1.6rem;
+            }
+
+            .big-heart {
+                font-size: 80px;
+                margin: 40px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 15px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .message-card {
+                padding: 40px 25px;
+                border-radius: 20px;
+            }
+
+            .message-text {
+                font-size: 1.2rem;
+                line-height: 1.8;
+            }
+
+            .message-text p {
+                margin-bottom: 20px;
+            }
+
+            .signature {
+                font-size: 1.4rem;
+                margin-top: 30px;
+            }
+
+            .big-heart {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Parallax background layers -->
+    <div class="parallax-bg">
+        <div class="parallax-layer layer-1" data-speed="0.3">
+            <div class="floating-heart">❤️</div>
+            <div class="floating-heart">💕</div>
+            <div class="floating-heart">💖</div>
+            <div class="floating-heart">❤️</div>
+            <div class="floating-heart">💝</div>
+            <div class="floating-heart">💗</div>
+        </div>
+        <div class="parallax-layer layer-2" data-speed="0.5">
+            <div class="floating-heart">💕</div>
+            <div class="floating-heart">❤️</div>
+            <div class="floating-heart">💖</div>
+            <div class="floating-heart">💝</div>
+            <div class="floating-heart">💗</div>
+            <div class="floating-heart">❤️</div>
+        </div>
+        <div class="parallax-layer layer-3" data-speed="0.8">
+            <div class="floating-heart">💖</div>
+            <div class="floating-heart">💕</div>
+            <div class="floating-heart">❤️</div>
+            <div class="floating-heart">💗</div>
+            <div class="floating-heart">💝</div>
+            <div class="floating-heart">💕</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header id="header">
+            <h1>Happy Valentine's Day</h1>
+            <p class="subtitle">To My Beautiful Girlfriend</p>
+        </header>
+
+        <div class="message-card" id="messageCard">
+            <div class="message-text">
+                <p>Every day with you feels like a dream come true. You light up my world in ways I never thought possible.</p>
+                <p>Your smile is my favorite sight, your laugh is my favorite sound, and your happiness is my favorite goal.</p>
+                <p>Thank you for being you, for loving me, and for making every moment we share absolutely magical.</p>
+            </div>
+            <div class="signature">Forever Yours ❤️</div>
+        </div>
+
+        <div class="big-heart" id="bigHeart" title="Click me!">❤️</div>
+
+        <!-- Audio Player -->
+        <div class="audio-player">
+            <audio id="backgroundMusic" loop>
+                <source src="song.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <button id="musicToggle" class="music-button">
+                <span class="playing">🎵 Playing</span>
+                <span class="paused" style="display: none;">▶️ Play Music</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Autoplay music when page loads
+        const audio = document.getElementById('backgroundMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const playingText = musicToggle.querySelector('.playing');
+        const pausedText = musicToggle.querySelector('.paused');
+
+        // Attempt to autoplay (works after user interaction due to browser policies)
+        window.addEventListener('load', function() {
+            audio.play().catch(function(error) {
+                // Autoplay was prevented, show play button
+                playingText.style.display = 'none';
+                pausedText.style.display = 'inline';
+                console.log('Autoplay prevented. User needs to click play.');
+            });
+        });
+
+        // Toggle music on button click
+        musicToggle.addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+                playingText.style.display = 'inline';
+                pausedText.style.display = 'none';
+            } else {
+                audio.pause();
+                playingText.style.display = 'none';
+                pausedText.style.display = 'inline';
+            }
+        });
+
+        // Parallax scroll effect
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            
+            // Parallax for background layers
+            document.querySelectorAll('.parallax-layer').forEach(layer => {
+                const speed = layer.dataset.speed;
+                layer.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+
+            // Parallax for header
+            const header = document.getElementById('header');
+            header.style.transform = `translateY(${scrolled * 0.5}px)`;
+            header.style.opacity = 1 - (scrolled / 500);
+
+            // 3D tilt effect for message card on scroll
+            const messageCard = document.getElementById('messageCard');
+            const cardOffset = messageCard.getBoundingClientRect().top;
+            const cardMiddle = window.innerHeight / 2;
+            const tiltAmount = (cardOffset - cardMiddle) / 50;
+            messageCard.style.transform = `perspective(1000px) rotateX(${tiltAmount}deg)`;
+        });
+
+        // Mouse move parallax effect for message card
+        document.addEventListener('mousemove', function(e) {
+            const messageCard = document.getElementById('messageCard');
+            const rect = messageCard.getBoundingClientRect();
+            const cardCenterX = rect.left + rect.width / 2;
+            const cardCenterY = rect.top + rect.height / 2;
+            
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            const rotateX = (mouseY - cardCenterY) / 30;
+            const rotateY = (mouseX - cardCenterX) / 30;
+            
+            messageCard.style.transform = `perspective(1000px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        // Reset card rotation when mouse leaves
+        document.getElementById('messageCard').addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        });
+
+        // Interactive heart click effect
+        const bigHeart = document.getElementById('bigHeart');
+        
+        bigHeart.addEventListener('click', function(e) {
+            const hearts = ['❤️', '💕', '💖', '💗', '💝', '💘'];
+            const numHearts = 12;
+            
+            for (let i = 0; i < numHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-burst';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = e.pageX + 'px';
+                heart.style.top = e.pageY + 'px';
+                
+                const angle = (Math.PI * 2 * i) / numHearts;
+                const distance = 100 + Math.random() * 50;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                heart.style.setProperty('--tx', tx + 'px');
+                heart.style.setProperty('--ty', ty + 'px');
+                
+                document.body.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 1000);
+            }
+        });
+    </script>
+</body>
+</html>
