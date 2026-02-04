@@ -15,9 +15,13 @@ body {
     #050814 0%,
     #0d0620 50%,
     #160a2e 100%
-  );  min-height: 100vh;
+  );  
+  min-height: 100vh;
   overflow-x: hidden;
   color: white;
+  /* Enable GPU acceleration */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body:not(.started) * {
@@ -142,6 +146,7 @@ body.started .container {
   color: rgba(255, 255, 255, 0.8);
   border: 2px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .no-btn:hover {
@@ -179,6 +184,17 @@ body.started .container {
   height: 100%;
   left: -50%;
   filter: blur(80px);
+  will-change: transform;
+}
+
+/* Reduce aurora on mobile for performance */
+@media (max-width: 768px) {
+  .aurora {
+    filter: blur(60px);
+  }
+  .aurora-2 {
+    display: none; /* Hide middle aurora on mobile */
+  }
 }
 
 .aurora-1 {
@@ -294,6 +310,16 @@ h1 {
 
   position: relative;
   transition: box-shadow 0.6s ease, transform 0.6s ease;
+  /* Enable GPU acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Disable 3D transforms on mobile */
+@media (max-width: 768px) {
+  .message-card {
+    transform: none !important;
+  }
 }
 
 .message-card::before {
@@ -357,6 +383,14 @@ letter-spacing: 0.01em;
 @media (prefers-reduced-motion: reduce) {
   .message-card {
     transform: none !important;
+  }
+  .aurora,
+  .floating-heart,
+  .star {
+    animation: none !important;
+  }
+  .landing-title {
+    animation: none !important;
   }
 }
 
