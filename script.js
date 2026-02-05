@@ -43,6 +43,8 @@ yesBtn.addEventListener('click', () => {
     document.body.classList.add('started');
     fadeInAudio();
     bigHeart.classList.add('heartbeat');
+    
+    // Don't initialize letter game yet - wait for big heart click
   }, 800);
 });
 
@@ -53,10 +55,10 @@ const sadMessages = [
   "Interesting choice. Bold.",
   "Pretty please? 💕",
   "Pattu, you pressed the wrong one 😌",
-  "Come on... for me? ❤️",
+  "Come on chellam... for me? ❤️",
   "Wow. Okay Susha. Rude.",
   "Let's pretend that didn't happen.",
-  "Okay Ammu... I know you're smiling now 😏"
+  "Okay ammu... I know you're smiling now 😏"
 ];
 
 noBtn.addEventListener('click', (e) => {
@@ -264,6 +266,13 @@ bigHeart.addEventListener('click', e => {
 
     setTimeout(() => h.remove(), 1300);
   }
+  
+  // Initialize letter game on first click
+  if (letterGameData.letters.length === 0) {
+    setTimeout(() => {
+      initLetterGame();
+    }, 500);
+  }
 });
 
 /* Audio glow effect */
@@ -280,3 +289,267 @@ const polaroid = document.getElementById('polaroid');
 polaroid.addEventListener('click', () => {
   polaroid.classList.toggle('flipped');
 });
+
+/* ==================== LETTER FINDING GAME ==================== */
+
+const letterGameData = {
+  name1: 'ananda',
+  name2: 'susha',
+  letters: [], // Will be populated with positions
+  foundLetters: new Set(),
+  letterSlots: []
+};
+
+function initLetterGame() {
+  const hiddenLettersContainer = document.getElementById('hiddenLetters');
+  const letterGameContainer = document.getElementById('letterGameContainer');
+  const letterSlots = document.querySelectorAll('.letter-slot');
+  const messageCard = document.getElementById('messageCard');
+  
+  // Store letter slots reference
+  letterGameData.letterSlots = Array.from(letterSlots);
+  
+  // Show the game UI
+  letterGameContainer.classList.add('active');
+  hiddenLettersContainer.classList.add('active');
+  
+  // Get message card boundaries
+  const cardRect = messageCard.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const viewportWidth = window.innerWidth;
+  
+  // Combine both names into one array of letters
+  const allLetters = (letterGameData.name1 + letterGameData.name2).split('');
+  
+  // Generate random positions for each letter
+  allLetters.forEach((letter, index) => {
+    const letterEl = document.createElement('div');
+    letterEl.className = 'clickable-letter';
+    letterEl.textContent = letter;
+    letterEl.dataset.index = index;
+    letterEl.dataset.letter = letter;
+    
+    let positionFound = false;
+    let attempts = 0;
+    let xPos, yPos;
+    
+    // Try to find a position that doesn't overlap the message card
+    while (!positionFound && attempts < 50) {
+      // Random position across viewport
+      xPos = 5 + Math.random() * 90; // 5% to 95% to avoid edges
+      yPos = 10 + Math.random() * 85; // 10% to 95%
+      
+      // Convert percentages to pixels for comparison
+      const xPixels = (xPos / 100) * viewportWidth;
+      const yPixels = (yPos / 100) * viewportHeight;
+      
+      // Check if position overlaps with message card (with extra padding)
+      const padding = 30; // Extra space around card
+      const overlapsCard = (
+        xPixels > (cardRect.left - padding) &&
+        xPixels < (cardRect.right + padding) &&
+        yPixels > (cardRect.top - padding) &&
+        yPixels < (cardRect.bottom + padding)
+      );
+      
+      if (!overlapsCard) {
+        positionFound = true;
+      }
+      
+      attempts++;
+    }
+    
+    // If we couldn't find a non-overlapping position, place it in margins
+    if (!positionFound) {
+      // Place in left or right margin
+      if (Math.random() > 0.5) {
+        xPos = 5 + Math.random() * 15; // Left margin
+      } else {
+        xPos = 80 + Math.random() * 15; // Right margin
+      }
+      yPos = 10 + Math.random() * 85;
+    }
+    
+    letterEl.style.left = xPos + '%';
+    letterEl.style.top = yPos + '%';
+    
+    // Random animation delay
+    letterEl.style.animationDelay = Math.random() * 2 + 's';
+    
+    // Click handler
+    letterEl.addEventListener('click', () => handleLetterClick(letterEl, index));
+    
+    hiddenLettersContainer.appendChild(letterEl);
+    letterGameData.letters.push(letterEl);
+  });
+}
+
+function handleLetterClick(letterEl, index) {
+  if (letterGameData.foundLetters.has(index)) return;
+  
+  // Mark as found
+  letterGameData.foundLetters.add(index);
+  
+  // Animate the clicked letter
+  letterEl.classList.add('collected');
+  
+  // Create celebration particles
+  createLetterParticles(letterEl);
+  
+  // Update the display slot
+  const slot = letterGameData.letterSlots[index];
+  slot.textContent = letterEl.dataset.letter;
+  slot.classList.add('found');
+  
+  // Play a sparkle sound effect (optional - would need audio file)
+  // new Audio('sparkle.mp3').play().catch(() => {});
+  
+  // Check if all letters are found
+  setTimeout(() => {
+    if (letterGameData.foundLetters.size === letterGameData.letterSlots.length) {
+      completeGame();
+    }
+  }, 500);
+}
+
+function createLetterParticles(element) {
+  const rect = element.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  
+  const particles = ['✨', '⭐', '💫', '🌟'];
+  const count = isMobile ? 8 : 12;
+  
+  for (let i = 0; i < count; i++) {
+    const particle = document.createElement('div');
+    particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+    particle.style.position = 'fixed';
+    particle.style.left = centerX + 'px';
+    particle.style.top = centerY + 'px';
+    particle.style.fontSize = (10 + Math.random() * 15) + 'px';
+    particle.style.pointerEvents = 'none';
+    particle.style.zIndex = '9999';
+    particle.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
+    document.body.appendChild(particle);
+    
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 60 + Math.random() * 60;
+    
+    requestAnimationFrame(() => {
+      particle.style.transform = 
+        `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) rotate(${Math.random() * 360}deg)`;
+      particle.style.opacity = '0';
+    });
+    
+    setTimeout(() => particle.remove(), 1000);
+  }
+}
+
+function completeGame() {
+  const letterDisplay = document.querySelector('.letter-display');
+  const finalMessage = document.getElementById('finalMessage');
+  const gameInstruction = document.querySelector('.game-instruction');
+  const polaroidContainer = document.getElementById('polaroid');
+  
+  // Hide instruction
+  gameInstruction.style.opacity = '0';
+  
+  // Fade out letter display
+  letterDisplay.classList.add('complete');
+  
+  // Show final message
+  setTimeout(() => {
+    finalMessage.classList.add('show');
+    
+    // Create massive heart burst
+    createVictoryHearts();
+    
+    // Reveal the polaroid photo after a delay
+    setTimeout(() => {
+      polaroidContainer.classList.add('revealed');
+      
+      // Create sparkles around the photo
+      createPhotoSparkles();
+    }, 1500);
+    
+    // Hide the entire game container after message shows
+    setTimeout(() => {
+      document.getElementById('letterGameContainer').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('letterGameContainer').style.display = 'none';
+      }, 1000);
+    }, 3000);
+  }, 500);
+}
+
+function createPhotoSparkles() {
+  const polaroid = document.getElementById('polaroid');
+  const rect = polaroid.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  
+  const sparkles = ['✨', '⭐', '💫', '🌟', '✨'];
+  const count = isMobile ? 15 : 25;
+  
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const sparkle = document.createElement('div');
+      sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+      sparkle.style.position = 'fixed';
+      sparkle.style.left = centerX + 'px';
+      sparkle.style.top = centerY + 'px';
+      sparkle.style.fontSize = (15 + Math.random() * 20) + 'px';
+      sparkle.style.pointerEvents = 'none';
+      sparkle.style.zIndex = '9999';
+      sparkle.style.transition = 'all 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+      document.body.appendChild(sparkle);
+      
+      const angle = (Math.PI * 2 * i) / count;
+      const distance = 100 + Math.random() * 80;
+      
+      requestAnimationFrame(() => {
+        sparkle.style.transform = 
+          `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) rotate(${Math.random() * 720}deg)`;
+        sparkle.style.opacity = '0';
+      });
+      
+      setTimeout(() => sparkle.remove(), 1500);
+    }, i * 40);
+  }
+}
+
+function createVictoryHearts() {
+  const hearts = ['❤️', '💕', '💖', '💗', '💓', '💘', '🩷'];
+  const count = isMobile ? 40 : 60;
+  
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const heart = document.createElement('div');
+      heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      heart.style.position = 'fixed';
+      
+      // Random position across the screen
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.top = Math.random() * 100 + '%';
+      
+      heart.style.fontSize = (20 + Math.random() * 40) + 'px';
+      heart.style.pointerEvents = 'none';
+      heart.style.zIndex = '9999';
+      heart.style.opacity = '0';
+      heart.style.transition = 'all 2s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+      document.body.appendChild(heart);
+      
+      requestAnimationFrame(() => {
+        heart.style.opacity = '1';
+        heart.style.transform = `scale(1.5) rotate(${Math.random() * 360}deg)`;
+      });
+      
+      setTimeout(() => {
+        heart.style.opacity = '0';
+        heart.style.transform = `scale(0) rotate(${720 + Math.random() * 360}deg)`;
+      }, 1500);
+      
+      setTimeout(() => heart.remove(), 3500);
+    }, i * 30); // Stagger the hearts
+  }
+}
