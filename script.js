@@ -9,10 +9,6 @@ for (let i = 0; i < 50; i++) { // Reduced from 100 for mobile performance
   landingStars.appendChild(s);
 }
 
-/* Preload polaroid image for smooth reveal */
-const preloadImage = new Image();
-preloadImage.src = 'us.jpg';
-
 /* Landing Page Logic */
 const landingPage = document.getElementById('landingPage');
 const yesBtn = document.getElementById('yesBtn');
@@ -91,7 +87,7 @@ noBtn.addEventListener('click', (e) => {
   
   let newX, newY;
   let attempts = 0;
-  const minDistance = isMobile ? 100 : 200; // Smaller min distance on mobile
+  const minDistance = isMobile ? 150 : 200; // Smaller min distance on mobile
   
   // Keep trying until we find a position far enough away
   do {
@@ -102,9 +98,6 @@ noBtn.addEventListener('click', (e) => {
     const distance = Math.sqrt(Math.pow(newX - currentX, 2) + Math.pow(newY - currentY, 2));
     if (distance >= minDistance || attempts >= 20) break;
   } while (attempts < 20);
-  
-  // Add smooth transition for position changes
-  noBtn.style.transition = 'left 0.3s ease-out, top 0.3s ease-out, transform 0.3s ease, font-size 0.3s ease, padding 0.3s ease';
   
   // Set position
   noBtn.style.position = 'fixed';
