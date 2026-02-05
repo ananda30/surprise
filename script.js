@@ -55,10 +55,10 @@ const sadMessages = [
   "Interesting choice. Bold.",
   "Pretty please? 💕",
   "Pattu, you pressed the wrong one 😌",
-  "Come on chellam... for me? ❤️",
+  "Come on... for me? ❤️",
   "Wow. Okay Susha. Rude.",
   "Let's pretend that didn't happen.",
-  "Okay ammu... I know you're smiling now 😏"
+  "Okay Ammu... I know you're smiling now 😏"
 ];
 
 noBtn.addEventListener('click', (e) => {
@@ -302,15 +302,15 @@ const letterGameData = {
 
 function initLetterGame() {
   const hiddenLettersContainer = document.getElementById('hiddenLetters');
-  const letterGameContainer = document.getElementById('letterGameContainer');
+  const letterGameInline = document.getElementById('letterGameInline');
   const letterSlots = document.querySelectorAll('.letter-slot');
   const messageCard = document.getElementById('messageCard');
   
   // Store letter slots reference
   letterGameData.letterSlots = Array.from(letterSlots);
   
-  // Show the game UI
-  letterGameContainer.classList.add('active');
+  // Show the game UI inline
+  letterGameInline.classList.add('active');
   hiddenLettersContainer.classList.add('active');
   
   // Get message card boundaries
@@ -446,10 +446,11 @@ function createLetterParticles(element) {
 }
 
 function completeGame() {
-  const letterDisplay = document.querySelector('.letter-display');
-  const finalMessage = document.getElementById('finalMessage');
-  const gameInstruction = document.querySelector('.game-instruction');
+  const letterDisplay = document.querySelector('.letter-display-inline');
+  const finalMessage = document.getElementById('finalMessageInline');
+  const gameInstruction = document.querySelector('.game-instruction-inline');
   const polaroidContainer = document.getElementById('polaroid');
+  const letterGameInline = document.getElementById('letterGameInline');
   
   // Hide instruction
   gameInstruction.style.opacity = '0';
@@ -464,21 +465,19 @@ function completeGame() {
     // Create massive heart burst
     createVictoryHearts();
     
-    // Reveal the polaroid photo after a delay
+    // Hide the inline game and reveal the polaroid photo
     setTimeout(() => {
-      polaroidContainer.classList.add('revealed');
+      letterGameInline.style.transition = 'opacity 1s ease';
+      letterGameInline.style.opacity = '0';
       
-      // Create sparkles around the photo
-      createPhotoSparkles();
-    }, 1500);
-    
-    // Hide the entire game container after message shows
-    setTimeout(() => {
-      document.getElementById('letterGameContainer').style.opacity = '0';
       setTimeout(() => {
-        document.getElementById('letterGameContainer').style.display = 'none';
+        letterGameInline.style.display = 'none';
+        polaroidContainer.classList.add('revealed');
+        
+        // Create sparkles around the photo
+        createPhotoSparkles();
       }, 1000);
-    }, 3000);
+    }, 2000);
   }, 500);
 }
 
@@ -519,7 +518,7 @@ function createPhotoSparkles() {
 }
 
 function createVictoryHearts() {
-  const hearts = ['❤️', '💕', '💖', '💗', '💓', '💘', '🩷'];
+  const hearts = ['❤️', '💕', '🩷'];
   const count = isMobile ? 40 : 60;
   
   for (let i = 0; i < count; i++) {

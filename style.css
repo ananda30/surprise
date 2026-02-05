@@ -249,30 +249,38 @@ body::after {
   pointer-events: none;
 }
 
-/* Letter Finding Game */
-.letter-game-container {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
+/* Letter Finding Game - Inline in Message Card */
+.letter-game-inline {
+  margin: 30px auto;
   text-align: center;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 1s ease;
+  display: none;
+  position: relative;
+  min-height: 200px;
 }
 
-.letter-game-container.active {
-  opacity: 1;
-  pointer-events: auto;
+.letter-game-inline.active {
+  display: block;
+  animation: gameSlideIn 0.8s ease forwards;
 }
 
-.game-instruction {
+@keyframes gameSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.game-instruction-inline {
   font-family: 'Playfair Display', serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #ffd4e5;
   text-shadow: 0 0 20px rgba(255, 107, 157, 0.6);
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   animation: instructionPulse 3s ease-in-out infinite;
 }
 
@@ -281,18 +289,20 @@ body::after {
   50% { opacity: 1; }
 }
 
-.letter-display {
+.letter-display-inline {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
-  padding: 12px 20px;
+  padding: 20px;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  max-width: 100%;
 }
 
 .name-section {
@@ -337,13 +347,13 @@ body::after {
   margin: 0 5px;
 }
 
-.final-message {
+.final-message-inline {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: 'Playfair Display', serif;
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: #ff6b9d;
   text-shadow: 0 0 40px rgba(255, 107, 157, 0.9);
@@ -352,7 +362,7 @@ body::after {
   white-space: nowrap;
 }
 
-.final-message.show {
+.final-message-inline.show {
   animation: finalMessageReveal 2s ease-out forwards;
 }
 
@@ -371,7 +381,7 @@ body::after {
   }
 }
 
-.letter-display.complete {
+.letter-display-inline.complete {
   animation: displayFadeOut 1s ease-out forwards;
 }
 
@@ -452,15 +462,9 @@ body::after {
 }
 
 @media (max-width: 768px) {
-  .letter-game-container {
-    top: 10px;
-    width: 95%;
-    max-width: 360px;
-  }
-  
-  .game-instruction {
-    font-size: 0.85rem;
-    margin-bottom: 10px;
+  .game-instruction-inline {
+    font-size: 0.95rem;
+    margin-bottom: 15px;
   }
   
   .letter-slot {
@@ -472,9 +476,9 @@ body::after {
     gap: 4px;
   }
   
-  .letter-display {
+  .letter-display-inline {
     gap: 8px;
-    padding: 10px 15px;
+    padding: 15px;
   }
   
   .plus-sign {
@@ -485,18 +489,14 @@ body::after {
     font-size: 1rem;
   }
   
-  .final-message {
-    font-size: 1.8rem;
+  .final-message-inline {
+    font-size: 2rem;
   }
 }
 
 @media (max-width: 480px) {
-  .letter-game-container {
-    width: 98%;
-  }
-  
-  .game-instruction {
-    font-size: 0.75rem;
+  .game-instruction-inline {
+    font-size: 0.85rem;
   }
   
   .letter-slot {
@@ -504,13 +504,13 @@ body::after {
     min-width: 18px;
   }
   
-  .letter-display {
+  .letter-display-inline {
     gap: 6px;
-    padding: 8px 12px;
+    padding: 12px;
   }
   
-  .final-message {
-    font-size: 1.5rem;
+  .final-message-inline {
+    font-size: 1.6rem;
   }
 }
 
@@ -534,7 +534,6 @@ body::after {
   z-index: 2;
   min-height: 100vh;
   padding: 40px 20px;
-  padding-top: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -543,7 +542,6 @@ body::after {
 
 @media (max-width: 768px) {
   .container {
-    padding-top: 90px;
     padding-left: 15px;
     padding-right: 15px;
   }
