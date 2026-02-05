@@ -9,6 +9,10 @@ for (let i = 0; i < 50; i++) { // Reduced from 100 for mobile performance
   landingStars.appendChild(s);
 }
 
+/* Preload polaroid image */
+const preloadImage = new Image();
+preloadImage.src = 'us.jpg';
+
 /* Landing Page Logic */
 const landingPage = document.getElementById('landingPage');
 const yesBtn = document.getElementById('yesBtn');
@@ -33,20 +37,187 @@ function fadeInAudio() {
   }, 100);
 }
 
-// Yes button - proceed to main site
+// Yes button - Galaxy Swirl Transition
 yesBtn.addEventListener('click', () => {
-  // Add celebration effect
+  // Disable button
+  yesBtn.disabled = true;
+  
+  // Heart burst
   createHeartBurst(yesBtn);
   
+  // Start galaxy swirl after short delay
+  setTimeout(() => {
+    startGalaxySwirl();
+  }, 400);
+});
+
+function startGalaxySwirl() {
+  const overlay = document.getElementById('galaxyOverlay');
+  const content = document.querySelector('.landing-content');
+  
+  // Activate overlay
+  overlay.classList.add('active');
+  
+  // Fade out content
+  content.style.transition = 'opacity 1s ease';
+  content.style.opacity = '0';
+  
+  // Create particles
+  const particleCount = isMobile ? 60 : 100;
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  
+  for (let i = 0; i < particleCount; i++) {
+    setTimeout(() => {
+      createGalaxyParticle(overlay, centerX, centerY, i);
+    }, i * 20);
+  }
+  
+  // Trigger reveal burst before main page appears
+  setTimeout(() => {
+    createRevealBurst();
+  }, 2800);
+  
+  // Transition to main page with slight delay after burst starts
   setTimeout(() => {
     landingPage.classList.add('hidden');
+    setTimeout(() => {
     document.body.classList.add('started');
     fadeInAudio();
     bigHeart.classList.add('heartbeat');
+  }, 600);
+  }, 3000);
+}
+
+function createRevealBurst() {
+  const revealBurst = document.getElementById('revealBurst');
+  const burstCircle = revealBurst.querySelector('.burst-circle');
+  
+  // Show reveal burst container
+  revealBurst.classList.add('active');
+  
+  // Trigger circle explosion
+  burstCircle.classList.add('explode');
+  
+  // Create sparkle burst
+  const sparkleCount = isMobile ? 30 : 50;
+  
+  for (let i = 0; i < sparkleCount; i++) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle-burst';
     
-    // Don't initialize letter game yet - wait for big heart click
-  }, 800);
-});
+    const angle = (Math.PI * 2 * i) / sparkleCount;
+    const distance = 200 + Math.random() * 150;
+    const tx = Math.cos(angle) * distance;
+    const ty = Math.sin(angle) * distance;
+    
+    sparkle.style.left = '50%';
+    sparkle.style.top = '50%';
+    sparkle.style.setProperty('--tx', tx + 'px');
+    sparkle.style.setProperty('--ty', ty + 'px');
+    sparkle.style.animation = 'sparkleBurst 1s ease-out forwards';
+    sparkle.style.animationDelay = (i * 0.01) + 's';
+    
+    // Random colors
+    if (Math.random() > 0.7) {
+      sparkle.style.background = '#ff6b9d';
+      sparkle.style.boxShadow = '0 0 10px rgba(255, 107, 157, 0.9)';
+    } else if (Math.random() > 0.4) {
+      sparkle.style.background = '#ffd700';
+      sparkle.style.boxShadow = '0 0 10px rgba(255, 215, 0, 0.9)';
+    }
+    
+    revealBurst.appendChild(sparkle);
+  }
+  
+  // Clean up after animation
+  setTimeout(() => {
+    revealBurst.style.transition = 'opacity 0.5s ease';
+    revealBurst.style.opacity = '0';
+    setTimeout(() => {
+      revealBurst.classList.remove('active');
+      revealBurst.style.opacity = '';
+      burstCircle.classList.remove('explode');
+      // Remove sparkles
+      revealBurst.querySelectorAll('.sparkle-burst').forEach(s => s.remove());
+    }, 500);
+  }, 1200);
+}
+
+function createGalaxyParticle(container, centerX, centerY, index) {
+  const particle = document.createElement('div');
+  particle.className = 'galaxy-particle';
+  
+  // Random starting position from edges
+  const side = Math.floor(Math.random() * 4);
+  let startX, startY;
+  
+  switch(side) {
+    case 0: // top
+      startX = Math.random() * window.innerWidth;
+      startY = -20;
+      break;
+    case 1: // right
+      startX = window.innerWidth + 20;
+      startY = Math.random() * window.innerHeight;
+      break;
+    case 2: // bottom
+      startX = Math.random() * window.innerWidth;
+      startY = window.innerHeight + 20;
+      break;
+    case 3: // left
+      startX = -20;
+      startY = Math.random() * window.innerHeight;
+      break;
+  }
+  
+  // Particle appearance
+  const size = 3 + Math.random() * 6;
+  const colors = ['#ff6b9d', '#ff8fab', '#ffc0cb', '#ffb6d9', '#ffffff', '#ffd700'];
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  
+  particle.style.left = startX + 'px';
+  particle.style.top = startY + 'px';
+  particle.style.width = size + 'px';
+  particle.style.height = size + 'px';
+  particle.style.background = color;
+  particle.style.boxShadow = `0 0 ${size * 3}px ${color}`;
+  particle.style.opacity = '0';
+  
+  container.appendChild(particle);
+  
+  // Animate to center with spiral
+  const duration = 2000 + Math.random() * 1000;
+  const startTime = Date.now();
+  
+  function animate() {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    if (progress < 1) {
+      // Spiral motion
+      const currentX = startX + (centerX - startX) * progress;
+      const currentY = startY + (centerY - startY) * progress;
+      
+      // Add spiral rotation
+      const angle = progress * Math.PI * 4; // 2 full rotations
+      const spiralRadius = 50 * (1 - progress);
+      const spiralX = Math.cos(angle) * spiralRadius;
+      const spiralY = Math.sin(angle) * spiralRadius;
+      
+      particle.style.left = (currentX + spiralX) + 'px';
+      particle.style.top = (currentY + spiralY) + 'px';
+      particle.style.opacity = progress < 0.1 ? progress * 10 : (progress > 0.9 ? (1 - progress) * 10 : 1);
+      particle.style.transform = `scale(${1 - progress * 0.5}) rotate(${progress * 720}deg)`;
+      
+      requestAnimationFrame(animate);
+    } else {
+      particle.remove();
+    }
+  }
+  
+  requestAnimationFrame(animate);
+}
 
 // No button - moves away when clicked
 let noClickCount = 0;

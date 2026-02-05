@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
 
+  <!-- Preload the polaroid image -->
+  <link rel="preload" as="image" href="us.jpg">
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -25,6 +28,9 @@
         <button class="valentine-btn no-btn" id="noBtn">No</button>
       </div>
     </div>
+    
+    <!-- Galaxy Swirl Overlay -->
+    <div class="galaxy-overlay" id="galaxyOverlay"></div>
   </div>
 
   <!-- Aurora -->
@@ -32,6 +38,11 @@
     <div class="aurora aurora-1"></div>
     <div class="aurora aurora-2"></div>
     <div class="aurora aurora-3"></div>
+  </div>
+
+  <!-- Reveal Burst Effect -->
+  <div class="reveal-burst" id="revealBurst">
+    <div class="burst-circle"></div>
   </div>
 
   <!-- Stars -->

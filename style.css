@@ -35,6 +35,12 @@ body.started .container {
   transition: opacity 2.0s ease;
 }
 
+body.started::after {
+  background: rgba(0, 0, 0, 0.35);
+  transition: background 1.2s ease;
+}
+
+
 /* Landing Page */
 .landing-page {
   position: fixed;
@@ -56,6 +62,107 @@ body.started .container {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+/* Galaxy Swirl Overlay */
+.galaxy-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.galaxy-overlay.active {
+  opacity: 1;
+}
+
+.galaxy-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Reveal Burst Effect */
+.reveal-burst {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reveal-burst.active {
+  opacity: 1;
+}
+
+.burst-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 107, 157, 0.8) 0%,
+    rgba(255, 139, 171, 0.6) 20%,
+    rgba(255, 182, 193, 0.4) 40%,
+    rgba(255, 255, 255, 0.2) 60%,
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 100px rgba(255, 107, 157, 0.8),
+    0 0 200px rgba(255, 107, 157, 0.6),
+    0 0 300px rgba(255, 107, 157, 0.4);
+  transform: scale(0);
+  opacity: 0;
+}
+
+.burst-circle.explode {
+  animation: burstExpand 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes burstExpand {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(40);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(50);
+  }
+}
+
+.sparkle-burst {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+  opacity: 0;
+}
+
+@keyframes sparkleBurst {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(720deg);
+  }
 }
 
 .landing-stars {
@@ -637,11 +744,29 @@ letter-spacing: 0.01em;
     color: #fff7fb;
 }
 
+.message-text p {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: textReveal 1.2s ease forwards;
+}
+
+.message-text p:nth-child(1) { animation-delay: 0.4s; }
+.message-text p:nth-child(2) { animation-delay: 1.2s; }
+.message-text p:nth-child(3) { animation-delay: 2.0s; }
+.message-text p:nth-child(4) { animation-delay: 2.8s; }
+
+@keyframes textReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .big-heart {
   font-size: 80px;
   margin-top: 40px;
   cursor: pointer;
-  animation: pulse 2s infinite;
+  animation: pulse 3.2s ease-in-out infinite;
 }
 
 @keyframes pulse {
@@ -856,7 +981,7 @@ letter-spacing: 0.01em;
 .polaroid-container.revealed {
   animation:
     polaroidReveal 2s ease forwards,
-    polaroidNudge 1.2s ease 2.5s;
+    polaroidNudge 1.2s ease 3.2s;
 }
 
 .polaroid-container:active .polaroid-inner {
@@ -871,7 +996,7 @@ letter-spacing: 0.01em;
   color: #ffd4e5;
   opacity: 0;
   animation: signatureFade 1.6s ease forwards;
-  animation-delay: 1.0s; /* LAST thing to appear */
+  animation-delay: 4.2s; /* LAST thing to appear */
 }
 
 .signed-by {
