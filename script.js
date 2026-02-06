@@ -222,7 +222,6 @@ function createGalaxyParticle(container, centerX, centerY, index) {
 // No button - moves away when clicked
 let noClickCount = 0;
 const sadMessages = [
-  "Are you sure? 🥺",
   "Interesting choice. Bold.",
   "Pretty please? 💕",
   "Pattu, you pressed the wrong one 😌",

@@ -190,8 +190,35 @@ body.started::after {
   font-size: clamp(2rem, 8vw, 4rem);
   text-shadow: 0 0 40px var(--rose);
   letter-spacing: -0.01em;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
   animation: titleFloat 3s ease-in-out infinite;
+}
+
+.landing-hint {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 40px;
+  letter-spacing: 0.02em;
+  animation: hintGlow 2s ease-in-out infinite;
+}
+
+@keyframes hintGlow {
+  0%, 100% { 
+    opacity: 0.6;
+    text-shadow: 0 0 10px rgba(255, 107, 157, 0.3);
+  }
+  50% { 
+    opacity: 0.9;
+    text-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-hint {
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+  }
 }
 
 @keyframes titleFloat {
