@@ -13,6 +13,39 @@ for (let i = 0; i < 50; i++) { // Reduced from 100 for mobile performance
 const preloadImage = new Image();
 preloadImage.src = 'us.jpg';
 
+/* Dynamic Title Cycling */
+const titles = [
+  "Chellakutty ❤️",
+  "Thangam ❤️",
+  "Everything ❤️",
+  "Forever ❤️",
+  "Azhagu Kanmani ❤️"
+];
+let currentTitleIndex = 0;
+let titleCycleInterval = null;
+
+function cycleDynamicTitle() {
+  const dynamicTitle = document.getElementById('dynamicTitle');
+  if (!dynamicTitle) return;
+  
+  // Fade out
+  dynamicTitle.classList.add('fade-out');
+  
+  setTimeout(() => {
+    // Change text
+    currentTitleIndex = (currentTitleIndex + 1) % titles.length;
+    dynamicTitle.textContent = titles[currentTitleIndex];
+    
+    // Fade in
+    dynamicTitle.classList.remove('fade-out');
+    dynamicTitle.classList.add('fade-in');
+    
+    setTimeout(() => {
+      dynamicTitle.classList.remove('fade-in');
+    }, 500);
+  }, 500);
+}
+
 /* Landing Page Logic */
 const landingPage = document.getElementById('landingPage');
 const yesBtn = document.getElementById('yesBtn');
@@ -32,7 +65,7 @@ function fadeInAudio() {
   let v = 0;
   const fade = setInterval(() => {
     v += 0.02;
-    audio.volume = Math.min(v, 0.08); // cap at medium
+    audio.volume = Math.min(v, 0.05); // cap at medium
     if (v >= 0.5) clearInterval(fade);
   }, 100);
 }
@@ -85,6 +118,11 @@ function startGalaxySwirl() {
     document.body.classList.add('started');
     fadeInAudio();
     bigHeart.classList.add('heartbeat');
+    
+    // Start dynamic title cycling after a brief delay
+    setTimeout(() => {
+      titleCycleInterval = setInterval(cycleDynamicTitle, 3000);
+    }, 2000);
   }, 600);
   }, 3000);
 }

@@ -693,6 +693,29 @@ h1 {
   opacity: .8;
 }
 
+#dynamicTitle {
+  display: inline-block;
+  /* min-width: 200px; */
+  /* text-align: center; */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+#dynamicTitle.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+#dynamicTitle.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  #dynamicTitle {
+    min-width: 150px;
+  }
+}
+
 .message-card {
   margin-top: 50px;
   padding: 50px 35px;
