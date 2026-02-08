@@ -82,6 +82,8 @@ yesBtn.addEventListener('click', () => {
   setTimeout(() => {
     startGalaxySwirl();
   }, 400);
+
+  setTimeout(startConstellations, 5000);
 });
 
 function startGalaxySwirl() {
@@ -760,3 +762,112 @@ function createVictoryHearts() {
     }, i * 30); // Stagger the hearts
   }
 }
+
+
+const constellationData = {
+  "ANANDA": { 
+    x: 15, y: 20, 
+    points: [[0,10], [5,0], [10,10], [2,6], [8,6]] // Simplified 'A' shape logic
+  },
+  "SUSHA": { 
+    x: 60, y: 70, 
+    points: [[0,0], [10,0], [0,5], [10,5], [0,10], [10,10]] // Organic pathing
+  }
+};
+
+function drawOrganicConstellation(name, startX, startY) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "constellation-svg");
+    document.getElementById('stars').appendChild(svg);
+
+    // Letter paths - defined as relative coordinates
+    const letters = {
+        'A': [[0,10], [2,0], [4,10], [1,6], [3,6]],
+        'N': [[0,10], [0,0], [4,10], [4,0]],
+        'D': [[0,0], [0,10], [3,10], [4,5], [3,0], [0,0]],
+        'S': [[4,0], [0,0], [0,5], [4,5], [4,10], [0,10]],
+        'U': [[0,0], [0,10], [4,10], [4,0]],
+        'H': [[0,0], [0,10], [0,5], [4,5], [4,0], [4,10]]
+    };
+
+    let currentX = startX;
+    const nameStars = [];
+    const nameLines = [];
+
+    name.split('').forEach(char => {
+        const path = letters[char.toUpperCase()];
+        if (!path) return;
+
+        let prevPoint = null;
+        path.forEach(([px, py]) => {
+            const jitterX = (Math.random() - 0.5) * 0.3;
+            const jitterY = (Math.random() - 0.5) * 0.3;
+            
+            // Reduced scaling (0.8 and 1.0) to make the name smaller
+            const finalX = currentX + (px * 0.8) + jitterX;
+            const finalY = startY + (py * 1.0) + jitterY;
+
+            const star = document.createElement('div');
+            star.className = 'c-star';
+            star.style.left = finalX + 'vw';
+            star.style.top = finalY + 'vh';
+            document.getElementById('stars').appendChild(star);
+            nameStars.push(star);
+
+            if (prevPoint) {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", prevPoint.x + "vw");
+                line.setAttribute("y1", prevPoint.y + "vh");
+                line.setAttribute("x2", finalX + "vw");
+                line.setAttribute("y2", finalY + "vh");
+                line.setAttribute("class", "constellation-line");
+                svg.appendChild(line);
+                nameLines.push(line);
+            }
+            prevPoint = {x: finalX, y: finalY};
+        });
+        currentX += 5; // Reduced spacing between letters
+    });
+
+    return { stars: nameStars, lines: nameLines };
+}
+
+// const ananda = drawOrganicConstellation("ANANDA", 8, 10);
+// const susha = drawOrganicConstellation("SUSHA", 65, 80);
+const susha = drawOrganicConstellation("SUSHA", 6, 8);
+const ananda = drawOrganicConstellation("ANANDA", 62, 78);
+
+function animateConstellation(group) {
+    // 1. Stars start appearing
+    group.stars.forEach((s, i) => {
+        setTimeout(() => s.classList.add('visible'), i * 300);
+    });
+
+    // 2. Lines start drawing shortly after
+    setTimeout(() => {
+        group.lines.forEach((l, i) => {
+            setTimeout(() => l.classList.add('line-active'), i * 400);
+        });
+    }, 1500);
+
+    // 3. Linger: Keep everything visible for 15 seconds
+    // Total time visible = 15000ms
+    setTimeout(() => {
+        group.stars.forEach(s => s.classList.remove('visible'));
+        group.lines.forEach(l => l.classList.remove('line-active'));
+    }, 20000); // 18s total (includes the draw time)
+}
+
+const startConstellations = () => {
+    // Show Susha first
+    animateConstellation(susha);
+    
+    // Show Ananda 6 seconds later so they overlap beautifully
+    setTimeout(() => animateConstellation(ananda), 6000);
+
+    // Repeat the whole cycle every 35 seconds
+    setInterval(() => {
+        animateConstellation(susha);
+        setTimeout(() => animateConstellation(ananda), 6000);
+    }, 30000);
+};
