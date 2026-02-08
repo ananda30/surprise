@@ -869,5 +869,5 @@ const startConstellations = () => {
     setInterval(() => {
         animateConstellation(susha);
         setTimeout(() => animateConstellation(ananda), 6000);
-    }, 30000);
+    }, 25000);
 };
