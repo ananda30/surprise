@@ -926,20 +926,103 @@ letter-spacing: 0.01em;
 
 
 
-/* Polaroid Flip */
-.polaroid-container {
+/* Polaroid Stack Container */
+.polaroid-stack-container {
+  position: relative;
   width: 180px;
   height: 260px;
   margin: 40px auto 0;
   perspective: 1000px;
-  cursor: pointer;
   opacity: 0;
   display: none;
 }
 
-.polaroid-container.revealed {
+.polaroid-stack-container.revealed {
   display: block;
   animation: polaroidReveal 2s ease forwards;
+}
+
+/* Polaroid Flip */
+.polaroid-container {
+  width: 180px;
+  height: 260px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: grab;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease,
+              z-index 0s;
+  transform-origin: center center;
+}
+
+.polaroid-container:active:not(.flippable) {
+  cursor: grabbing;
+}
+
+.polaroid-container.dragging {
+  cursor: grabbing;
+  z-index: 100 !important;
+}
+
+/* Stack positioning - top cards have higher z-index */
+.polaroid-container[data-index="0"] {
+  z-index: 4;
+  transform: rotate(3deg);
+}
+
+.polaroid-container[data-index="1"] {
+  z-index: 3;
+  transform: rotate(-2deg) translateY(2px);
+}
+
+.polaroid-container[data-index="2"] {
+  z-index: 2;
+  transform: rotate(2deg) translateY(4px);
+}
+
+.polaroid-container[data-index="3"] {
+  z-index: 1;
+  transform: rotate(-4deg) translateY(6px);
+}
+
+/* When last photo is alone, center it */
+.polaroid-container[data-index="3"]:not(.flipped) {
+  transition: transform 0.5s ease;
+}
+
+.polaroid-container[data-index="3"].alone {
+  transform: rotate(4deg) translateY(0) !important;
+}
+
+/* Swiped away state */
+.polaroid-container.swiped {
+  opacity: 0 !important;
+  pointer-events: none;
+  z-index: 0 !important;
+  transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), 
+              opacity 0.6s ease !important;
+}
+
+.polaroid-container.swiped-left {
+  transform: translateX(-500px) rotate(-45deg) !important;
+}
+
+.polaroid-container.swiped-right {
+  transform: translateX(500px) rotate(45deg) !important;
+}
+
+.polaroid-container.swiped-up {
+  transform: translateY(-500px) rotate(15deg) !important;
+}
+
+/* Flippable last photo */
+.polaroid-container.flippable {
+  cursor: pointer;
+}
+
+.polaroid-container.flippable:hover:not(.flipped) .polaroid-inner {
+  transform: scale(1.05) rotateY(var(--flip, 0deg));
 }
 
 .polaroid-inner {
@@ -1052,6 +1135,12 @@ letter-spacing: 0.01em;
   opacity: 0;
   animation: signatureFade 1.6s ease forwards;
   animation-delay: 6.2s; /* LAST thing to appear */
+
+  /* position: absolute;
+  bottom: 24px;           /* adjust to taste */
+  /* right: 28px;            /* or center if you prefer */
+  /* text-align: right; */
+  /* pointer-events: none; */ 
 }
 
 .signed-by {

@@ -265,10 +265,10 @@ const sadMessages = [
   "Interesting choice. Bold.",
   "Pretty please? 💕",
   "Pattu, you pressed the wrong one 😌",
-  "Come on chellam... for me? ❤️",
+  "Come on... for me? ❤️",
   "Wow. Okay Susha. Rude.",
   "Let's pretend that didn't happen.",
-  "Okay ammu... I know you're smiling now 😏"
+  "Okay... I know you're smiling now 😏"
 ];
 
 noBtn.addEventListener('click', (e) => {
@@ -493,13 +493,6 @@ audio.addEventListener('play', () => {
   }, 750);
 });
 
-/* Polaroid flip */
-const polaroid = document.getElementById('polaroid');
-
-polaroid.addEventListener('click', () => {
-  polaroid.classList.toggle('flipped');
-});
-
 /* ==================== LETTER FINDING GAME ==================== */
 
 const letterGameData = {
@@ -659,7 +652,7 @@ function completeGame() {
   const letterDisplay = document.querySelector('.letter-display-inline');
   const finalMessage = document.getElementById('finalMessageInline');
   const gameInstruction = document.querySelector('.game-instruction-inline');
-  const polaroidContainer = document.getElementById('polaroid');
+  const polaroidStack = document.getElementById('polaroidStack');
   const letterGameInline = document.getElementById('letterGameInline');
   
   // Hide instruction
@@ -675,25 +668,248 @@ function completeGame() {
     // Create massive heart burst
     createVictoryHearts();
     
-    // Hide the inline game and reveal the polaroid photo
+    // Hide the inline game and reveal the polaroid stack
     setTimeout(() => {
       letterGameInline.style.transition = 'opacity 1s ease';
       letterGameInline.style.opacity = '0';
       
       setTimeout(() => {
         letterGameInline.style.display = 'none';
-        polaroidContainer.classList.add('revealed');
+        polaroidStack.classList.add('revealed');
         
-        // Create sparkles around the photo
+        // Initialize swipe functionality
+        initPolaroidSwipe();
+        
+        // Create sparkles around the photos
         createPhotoSparkles();
       }, 1000);
     }, 2000);
   }, 500);
 }
 
+let stackCompleted = false;
+
+// Polaroid Swipe Functionality
+function initPolaroidSwipe() {
+  const polaroids = document.querySelectorAll('.polaroid-container');
+  
+  polaroids.forEach((polaroid, index) => {
+    const isFlippable = polaroid.classList.contains('flippable');
+    
+    if (isFlippable) {
+      // Last photo - flip functionality (works anytime)
+      polaroid.addEventListener('click', () => {
+        if (polaroid.classList.contains('dragging')) return;
+
+        const wasFlipped = polaroid.classList.contains('flipped');
+        polaroid.classList.toggle('flipped');
+
+        // If stack is complete AND user flipped it back
+        if (stackCompleted && wasFlipped) {
+          resetPolaroidStack();
+        }
+      });
+
+    } else {
+      // Swipeable photos
+      let startX = 0;
+      let startY = 0;
+      let currentX = 0;
+      let currentY = 0;
+      let isDragging = false;
+      
+      const handleStart = (e) => {
+        isDragging = true;
+        const touch = e.type.includes('touch') ? e.touches[0] : e;
+        startX = touch.clientX;
+        startY = touch.clientY;
+        polaroid.style.transition = 'none';
+        polaroid.classList.add('dragging');
+      };
+      
+      const handleMove = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        
+        const touch = e.type.includes('touch') ? e.touches[0] : e;
+        currentX = touch.clientX - startX;
+        currentY = touch.clientY - startY;
+        
+        const rotation = currentX * 0.1;
+        polaroid.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
+        polaroid.style.opacity = 1 - (Math.abs(currentX) / 400);
+      };
+      
+      const handleEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        setTimeout(() => polaroid.classList.remove('dragging'), 100);
+        
+        const threshold = 120;
+        const distance = Math.sqrt(currentX * currentX + currentY * currentY);
+        
+        if (distance > threshold) {
+          // Swipe away - remove inline styles first
+          polaroid.style.transform = '';
+          polaroid.style.opacity = '';
+          polaroid.style.transition = '';
+          
+          
+          if (Math.abs(currentX) > Math.abs(currentY)) {
+            // Horizontal swipe
+            if (currentX > 0) {
+              polaroid.classList.add('swiped', 'swiped-right');
+            } else {
+              polaroid.classList.add('swiped', 'swiped-left');
+            }
+          } else {
+            // Vertical swipe
+            polaroid.classList.add('swiped', 'swiped-up');
+          }
+          
+          // Show reset button when all are swiped or flipped
+          checkResetButtonVisibility();
+          
+          // Create swipe sparkles
+          createSwipeSparkles(polaroid);
+        } else {
+          // Return to position
+          polaroid.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease';
+          polaroid.style.transform = '';
+          polaroid.style.opacity = '';
+        }
+        
+        currentX = 0;
+        currentY = 0;
+      };
+      
+      // Touch events
+      polaroid.addEventListener('touchstart', handleStart, { passive: false });
+      polaroid.addEventListener('touchmove', handleMove, { passive: false });
+      polaroid.addEventListener('touchend', handleEnd);
+      
+      // Mouse events
+      polaroid.addEventListener('mousedown', handleStart);
+      document.addEventListener('mousemove', handleMove);
+      document.addEventListener('mouseup', handleEnd);
+    }
+  });
+}
+
+function checkResetButtonVisibility() {
+  const swipeables = document.querySelectorAll(
+    '.polaroid-container:not(.flippable)'
+  );
+
+  const allSwiped = Array.from(swipeables).every(card =>
+    card.classList.contains('swiped')
+  );
+
+  if (allSwiped) {
+    const lastPhoto = document.querySelector('.polaroid-container.flippable');
+    if (lastPhoto) {
+      lastPhoto.classList.add('alone');
+    }
+
+    stackCompleted = true;
+  }
+}
+
+function resetPolaroidStack() {
+  const polaroids = document.querySelectorAll('.polaroid-container');
+
+  polaroids.forEach(card => {
+    card.classList.remove(
+      'swiped',
+      'swiped-left',
+      'swiped-right',
+      'swiped-up',
+      'flipped',
+      'alone'
+    );
+
+    card.style.transform = '';
+    card.style.opacity = '';
+    card.style.transition = '';
+  });
+
+  stackCompleted = false;
+}
+
+
+function createSwipeSparkles(element) {
+  const rect = element.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  
+  const sparkles = ['✨', '💫', '⭐'];
+  const count = isMobile ? 8 : 12;
+  
+  for (let i = 0; i < count; i++) {
+    const sparkle = document.createElement('div');
+    sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+    sparkle.style.position = 'fixed';
+    sparkle.style.left = centerX + 'px';
+    sparkle.style.top = centerY + 'px';
+    sparkle.style.fontSize = (12 + Math.random() * 15) + 'px';
+    sparkle.style.pointerEvents = 'none';
+    sparkle.style.zIndex = '9999';
+    sparkle.style.transition = 'all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+    document.body.appendChild(sparkle);
+    
+    const angle = (Math.PI * 2 * i) / count;
+    const distance = 50 + Math.random() * 50;
+    
+    requestAnimationFrame(() => {
+      sparkle.style.transform = 
+        `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) rotate(${Math.random() * 360}deg)`;
+      sparkle.style.opacity = '0';
+    });
+    
+    setTimeout(() => sparkle.remove(), 1000);
+  }
+}
+
+function createShuffleSparkles() {
+  const stack = document.getElementById('polaroidStack');
+  const rect = stack.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  
+  const hearts = ['❤️', '💕', '💖'];
+  const count = isMobile ? 15 : 25;
+  
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const heart = document.createElement('div');
+      heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      heart.style.position = 'fixed';
+      heart.style.left = centerX + 'px';
+      heart.style.top = centerY + 'px';
+      heart.style.fontSize = (15 + Math.random() * 20) + 'px';
+      heart.style.pointerEvents = 'none';
+      heart.style.zIndex = '9999';
+      heart.style.transition = 'all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+      document.body.appendChild(heart);
+      
+      const angle = (Math.PI * 2 * i) / count;
+      const distance = 80 + Math.random() * 60;
+      
+      requestAnimationFrame(() => {
+        heart.style.transform = 
+          `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) rotate(${Math.random() * 720}deg)`;
+        heart.style.opacity = '0';
+      });
+      
+      setTimeout(() => heart.remove(), 1200);
+    }, i * 30);
+  }
+}
+
 function createPhotoSparkles() {
-  const polaroid = document.getElementById('polaroid');
-  const rect = polaroid.getBoundingClientRect();
+  const polaroidStack = document.getElementById('polaroidStack');
+  const rect = polaroidStack.getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
   
@@ -832,12 +1048,17 @@ function drawOrganicConstellation(name, startX, startY) {
     return { stars: nameStars, lines: nameLines };
 }
 
-// const ananda = drawOrganicConstellation("ANANDA", 8, 10);
-// const susha = drawOrganicConstellation("SUSHA", 65, 80);
-const susha = drawOrganicConstellation("SUSHA", 6, 8);
-const ananda = drawOrganicConstellation("ANANDA", 62, 78);
+// Initialize constellations only after page is ready
+let susha, ananda;
+
+function initConstellations() {
+    susha = drawOrganicConstellation("SUSHA", 6, 8);
+    ananda = drawOrganicConstellation("ANANDA", 62, 78);
+}
 
 function animateConstellation(group) {
+    if (!group) return; // Safety check
+    
     // 1. Stars start appearing
     group.stars.forEach((s, i) => {
         setTimeout(() => s.classList.add('visible'), i * 300);
@@ -859,6 +1080,11 @@ function animateConstellation(group) {
 }
 
 const startConstellations = () => {
+    // Initialize constellations first
+    if (!susha || !ananda) {
+        initConstellations();
+    }
+    
     // Show Susha first
     animateConstellation(susha);
     
