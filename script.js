@@ -1137,3 +1137,61 @@ const startConstellations = () => {
         setTimeout(() => animateConstellation(ananda), 6000);
     }, 25000);
 };
+
+/* Flower Button Functionality */
+const flowerBtn = document.getElementById('flowerBtn');
+
+// Array of flower image paths - replace these with your actual flower image filenames
+const flowerImages = [
+  'flower1.png',
+  'flower2.png',
+  'flower3.png',
+  'flower4.png',
+  'flower5.png',
+  'flower6.png',
+  'flower7.png',
+  'flower8.png',
+  'flower9.png',
+  'flower11.png',
+  'flower12.png',
+  'flower13.png'
+];
+
+function createFlowerBurst() {
+  const count = isMobile ? 10 : 20;
+  
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const flower = document.createElement('img');
+      
+      // Randomly select a flower image
+      flower.src = flowerImages[Math.floor(Math.random() * flowerImages.length)];
+      flower.className = 'floating-flower-img';
+      
+      // Random starting position across the bottom half of screen
+      flower.style.left = Math.random() * 100 + '%';
+      flower.style.bottom = '10%';
+      
+      // Random size between 60px and 120px for actual photos
+      const size = 100 + Math.random() * 100;
+      flower.style.width = size + 'px';
+      flower.style.height = size + 'px';
+      
+      // Make images circular or keep aspect ratio
+      // flower.style.objectFit = 'cover';
+      // flower.style.borderRadius = '50%'; // Makes them circular - remove this line if you want square/original shape
+      // flower.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+      
+      document.body.appendChild(flower);
+      
+      // Remove flower after animation completes
+      setTimeout(() => flower.remove(), 4000);
+    }, i * 80); // Stagger the flowers
+  }
+}
+
+
+// Add click event listener to flower button
+if (flowerBtn) {
+  flowerBtn.addEventListener('click', createFlowerBurst);
+}
