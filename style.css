@@ -191,16 +191,33 @@ body.started::after {
   text-shadow: 0 0 40px var(--rose);
   letter-spacing: -0.01em;
   margin-bottom: 20px;
-  animation: titleFloat 3s ease-in-out infinite;
+  position: relative;
+  display: inline-block;
+}
+
+.landing-title.typing::after {
+  content: '|';
+  animation: blink 0.7s infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
 .landing-hint {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.7);
+  opacity: 0;
   margin-bottom: 40px;
   letter-spacing: 0.02em;
+}
+
+.landing-hint.visible {
   animation: hintGlow 2s ease-in-out infinite;
+  opacity: 1;
 }
 
 @keyframes hintGlow {
@@ -231,6 +248,12 @@ body.started::after {
   gap: 30px;
   justify-content: center;
   flex-wrap: wrap;
+  opacity: 0;
+}
+
+.landing-buttons.visible {
+  opacity: 1;
+  transition: opacity 1s ease;
 }
 
 .valentine-btn {

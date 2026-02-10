@@ -1,3 +1,43 @@
+/* Typing Animation for Landing Page */
+const landingTitle = document.querySelector('.landing-title');
+const landingHint = document.querySelector('.landing-hint');
+const landingButtons = document.querySelector('.landing-buttons');
+const fullText = "Oii, Will You Be My Valentine?";
+
+let charIndex = 0;
+landingTitle.textContent = '';
+landingTitle.classList.add('typing');
+
+function typeCharacter() {
+  if (charIndex < fullText.length) {
+    landingTitle.textContent += fullText[charIndex];
+    charIndex++;
+    // Randomized typing speed between 50ms and 120ms
+    const randomDelay = 50 + Math.random() * 70;
+    setTimeout(typeCharacter, randomDelay);
+  } else {
+    // Remove typing cursor
+    setTimeout(() => {
+      landingTitle.classList.remove('typing');
+      
+      // Gradual fade-in for hint (starts first)
+      setTimeout(() => {
+        landingHint.style.transition = 'opacity 1.5s ease';
+        landingHint.classList.add('visible');
+      }, 600);
+      
+      // Gradual fade-in for buttons (starts slightly after hint)
+      setTimeout(() => {
+        landingButtons.style.transition = 'opacity 1.5s ease';
+        landingButtons.classList.add('visible');
+      }, 600);
+    }, 300);
+  }
+}
+
+// Start typing animation after a brief delay
+setTimeout(typeCharacter, 800);
+
 /* Landing Page Stars */
 const landingStars = document.getElementById('landingStars');
 for (let i = 0; i < 50; i++) { // Reduced from 100 for mobile performance
