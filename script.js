@@ -1156,6 +1156,11 @@ const flowerImages = [
   'flower13.png'
 ];
 
+flowerImages.forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
+
 function createFlowerBurst() {
   const count = isMobile ? 10 : 20;
   
