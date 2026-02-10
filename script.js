@@ -1148,7 +1148,6 @@ const flowerImages = [
   'flower3.png',
   'flower4.png',
   'flower5.png',
-  'flower6.png',
   'flower7.png',
   'flower8.png',
   'flower9.png',
