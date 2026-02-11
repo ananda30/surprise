@@ -22,16 +22,16 @@ function typeCharacter() {
       
       // Gradual fade-in for hint (starts first)
       setTimeout(() => {
-        landingHint.style.transition = 'opacity 1.5s ease';
+        landingHint.style.transition = 'opacity 1s ease';
         landingHint.classList.add('visible');
-      }, 600);
+      }, 800);
       
       // Gradual fade-in for buttons (starts slightly after hint)
       setTimeout(() => {
         landingButtons.style.transition = 'opacity 1.5s ease';
         landingButtons.classList.add('visible');
-      }, 600);
-    }, 300);
+      }, 1200);
+    }, 1000);
   }
 }
 
@@ -304,7 +304,7 @@ let noClickCount = 0;
 const sadMessages = [
   "Interesting choice. Bold.",
   "Pretty please? 💕",
-  "Pattu, you pressed the wrong one 😌",
+  "Ammu, you pressed the wrong one 😌",
   "Come on... for me? ❤️",
   "Wow. Okay Susha. Rude.",
   "Let's pretend that didn't happen.",
@@ -1109,7 +1109,7 @@ function animateConstellation(group) {
         group.lines.forEach((l, i) => {
             setTimeout(() => l.classList.add('line-active'), i * 400);
         });
-    }, 1500);
+    }, 1000);
 
     // 3. Linger: Keep everything visible for 15 seconds
     // Total time visible = 15000ms

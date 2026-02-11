@@ -216,7 +216,7 @@ body.started::after {
 }
 
 .landing-hint.visible {
-  animation: hintGlow 2s ease-in-out infinite;
+  /* animation: hintGlow 2s ease-in-out infinite; */
   opacity: 1;
 }
 
