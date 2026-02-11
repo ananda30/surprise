@@ -35,6 +35,24 @@ body.started .container {
   transition: opacity 2.0s ease;
 }
 
+/* Sequential Loading Styles */
+body.started #header h1,
+body.started #header .subtitle,
+body.started #messageCard,
+body.started .heart-wrap {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+body.started #header h1.visible,
+body.started #header .subtitle.visible,
+body.started #messageCard.visible,
+body.started .heart-wrap.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
 body.started::after {
   background: rgba(0, 0, 0, 0.35);
   transition: background 1.2s ease;
@@ -828,10 +846,10 @@ letter-spacing: 0.01em;
 .message-text p:nth-child(3) { animation-delay: 2.0s; }
 .message-text p:nth-child(4) { animation-delay: 2.8s; } */
 
-.message-text p:nth-child(1) { animation-delay: 0.4s; }
-.message-text p:nth-child(2) { animation-delay: 1.8s; }
-.message-text p:nth-child(3) { animation-delay: 3.4s; }
-.message-text p:nth-child(4) { animation-delay: 5.0s; }
+.message-text p:nth-child(1) { animation-delay: 5.0s; }
+.message-text p:nth-child(2) { animation-delay: 8.8s; }
+.message-text p:nth-child(3) { animation-delay: 12.8s; }
+.message-text p:nth-child(4) { animation-delay: 14.8s; }
 
 @keyframes textReveal {
   to {
@@ -1157,7 +1175,7 @@ letter-spacing: 0.01em;
   color: #ffd4e5;
   opacity: 0;
   animation: signatureFade 1.6s ease forwards;
-  animation-delay: 6.2s; /* LAST thing to appear */
+  animation-delay: 16.4s; /* LAST thing to appear */
 
   /* position: absolute;
   bottom: 24px;           /* adjust to taste */

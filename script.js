@@ -159,14 +159,46 @@ function startGalaxySwirl() {
     setTimeout(() => {
     document.body.classList.add('started');
     fadeInAudio();
-    bigHeart.classList.add('heartbeat');
     
-    // Start dynamic title cycling after a brief delay
-    setTimeout(() => {
-      titleCycleInterval = setInterval(cycleDynamicTitle, 3000);
-    }, 2000);
+    // Start sequential loading of main page content
+    startSequentialLoad();
   }, 600);
   }, 3000);
+}
+
+/* Sequential Loading Animation */
+function startSequentialLoad() {
+  const header = document.getElementById('header');
+  const mainTitle = header.querySelector('h1');
+  const subtitle = header.querySelector('.subtitle');
+  const messageCard = document.getElementById('messageCard');
+  const heartWrap = document.querySelector('.heart-wrap');
+  
+  // First: Fade in "Happy Valentine's Day"
+  setTimeout(() => {
+    mainTitle.classList.add('visible');
+  }, 500);
+  
+  // Second: Fade in "To My Azhagu Kanmani"
+  setTimeout(() => {
+    subtitle.classList.add('visible');
+    
+    // Start dynamic title cycling after subtitle appears
+    setTimeout(() => {
+      titleCycleInterval = setInterval(cycleDynamicTitle, 3000);
+    }, 1500);
+  }, 2200);
+  
+  // Third: Fade in the message card
+  setTimeout(() => {
+    messageCard.classList.add('visible');
+  }, 4000);
+  
+  // Fourth: Fade in the big heart and flower button
+  setTimeout(() => {
+    heartWrap.classList.add('visible');
+    bigHeart.classList.add('heartbeat');
+  }, 17800);
 }
 
 function createRevealBurst() {
