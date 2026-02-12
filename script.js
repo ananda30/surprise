@@ -31,7 +31,7 @@ function typeCharacter() {
         landingButtons.style.transition = 'opacity 1.5s ease';
         landingButtons.classList.add('visible');
       }, 1200);
-    }, 1000);
+    }, 1700);
   }
 }
 
@@ -58,6 +58,7 @@ const titles = [
   "Chellakutty ❤️",
   "Thangam ❤️",
   "Everything ❤️",
+  "Pattu ❤️",
   "Forever ❤️",
   "Azhagu Kanmani ❤️"
 ];
