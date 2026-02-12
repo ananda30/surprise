@@ -199,7 +199,7 @@ function startSequentialLoad() {
   setTimeout(() => {
     heartWrap.classList.add('visible');
     bigHeart.classList.add('heartbeat');
-  }, 17800);
+  }, 19800);
 }
 
 function createRevealBurst() {
