@@ -849,8 +849,8 @@ letter-spacing: 0.01em;
 .message-text p:nth-child(1) { animation-delay: 5.0s; }
 .message-text p:nth-child(2) { animation-delay: 8.8s; }
 .message-text p:nth-child(3) { animation-delay: 12.8s; }
-.message-text p:nth-child(4) { animation-delay: 15.0s; }
-.message-text p:nth-child(5) { animation-delay: 17.0s; }
+.message-text p:nth-child(4) { animation-delay: 15.2s; }
+.message-text p:nth-child(5) { animation-delay: 18.8s; }
 
 @keyframes textReveal {
   to {
@@ -1176,7 +1176,7 @@ letter-spacing: 0.01em;
   color: #ffd4e5;
   opacity: 0;
   animation: signatureFade 1.6s ease forwards;
-  animation-delay: 18.4s; /* LAST thing to appear */
+  animation-delay: 20.2s; /* LAST thing to appear */
 
   /* position: absolute;
   bottom: 24px;           /* adjust to taste */

@@ -55,11 +55,11 @@ preloadImage.src = 'us.jpg';
 
 /* Dynamic Title Cycling */
 const titles = [
-  "Chellakutty ❤️",
   "Thangam ❤️",
   "Everything ❤️",
   "Pattu ❤️",
   "Forever ❤️",
+  "Chellakutty ❤️",
   "Azhagu Kanmani ❤️"
 ];
 let currentTitleIndex = 0;
@@ -199,7 +199,7 @@ function startSequentialLoad() {
   setTimeout(() => {
     heartWrap.classList.add('visible');
     bigHeart.classList.add('heartbeat');
-  }, 19800);
+  }, 22000);
 }
 
 function createRevealBurst() {
